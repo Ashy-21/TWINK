@@ -1,0 +1,55 @@
+{% extends "chat/base.html" %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card p-4">
+      <h4>Edit profile</h4>
+      <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input id="id_username" name="username" value="{{ request.user.username }}" class="form-control" minlength="5" maxlength="16" pattern="[a-z0-9._]{5,16}">
+          <div id="username-availability" class="form-text"></div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Name (optional)</label>
+          {{ form.name }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Bio</label>
+          {{ form.bio }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Profile picture</label>
+          {{ form.picture }}
+          <div class="form-text">Square image recommended. We'll crop it to a circle for display.</div>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary">Save</button>
+          <a href="{% url 'chat:home' %}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const uname = document.getElementById('id_username');
+    const hint = document.getElementById('username-availability');
+    if(!uname) return;
+    let t;
+    uname.addEventListener('input', function(){
+      clearTimeout(t);
+      t = setTimeout(()=> {
+        fetch("{% url 'chat:username_check' %}?q="+encodeURIComponent(uname.value)).then(r=>r.json()).then(d=>{
+          if(!uname.value){ hint.textContent=''; return; }
+          if(uname.value === "{{ request.user.username }}"){ hint.textContent='This is your current username'; hint.style.color='green'; return; }
+          if(d.exists){ hint.textContent = 'Username already taken'; hint.style.color='red'; } else { hint.textContent = 'Username available'; hint.style.color='green'; }
+        });
+      }, 300);
+    })
+  })();
+</script>
+{% endblock %}

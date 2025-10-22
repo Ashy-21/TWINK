@@ -1,0 +1,79 @@
+{% extends "chat/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row g-0">
+  <div class="col-md-3 border-end" id="left-col" style="min-height:72vh;">
+    <div class="p-3 d-flex align-items-center justify-content-between">
+      <div>
+        <a id="brand-username" href="{% url 'chat:view_profile' user.username %}" class="text-decoration-none">
+          <strong class="fs-5">{{ profile.display_name }}</strong><br>
+          <small class="text-muted">@{{ user.username }}</small>
+        </a>
+      </div>
+      <div>
+        <button id="create-group-btn" class="btn btn-sm btn-outline-primary">Create Group</button>
+      </div>
+    </div>
+
+    <div class="p-2">
+      <div class="btn-group w-100 mb-2" role="group">
+        <button class="btn btn-light w-50 active" id="tab-personal">Personal</button>
+        <button class="btn btn-light w-50" id="tab-groups">Groups</button>
+      </div>
+
+      <input id="search-input" class="form-control mb-2" placeholder="Search users or chats...">
+      <div id="list-area" class="mt-1"></div>
+    </div>
+  </div>
+
+  <div class="col-md-9" id="chat-col">
+    <div class="d-flex flex-column" style="height:72vh;">
+      <div id="chat-header" class="px-4 py-3 border-bottom bg-white">
+        <strong class="text-muted">Select a chat</strong>
+      </div>
+
+      <div id="chat-messages" class="flex-grow-1 p-3 bg-light" style="overflow:auto;">
+        <div id="no-chat-placeholder" class="h-100 d-flex align-items-center justify-content-center text-center text-muted">
+          <div>
+            <h4>Keep your conversations private</h4>
+            <p class="mb-0">Select or search a user to start a chat.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-3 py-2 bg-white border-top">
+        <div class="input-group">
+          <input id="chat-input" class="form-control" placeholder="Select a chat to start messaging" disabled>
+          <button id="chat-send" class="btn btn-primary" disabled>Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createGroupModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <form id="create-group-form">
+        <div class="modal-header">
+          <h5 class="modal-title">Create group</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <input id="group-name" class="form-control" placeholder="Group name" required>
+          </div>
+          <div class="mb-2">
+            <input id="group-members" class="form-control" placeholder="Member usernames (comma separated)">
+            <div class="form-text">Add members by username (commas). You will be added automatically.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+          <button class="btn btn-primary" type="submit">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

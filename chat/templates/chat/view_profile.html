@@ -1,0 +1,58 @@
+{% extends "chat/base.html" %}
+{% load static %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  .profile-card { max-width:520px; margin:auto; }
+  .avatar-circle { width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:48px;margin:auto;color:#fff; }
+  .meta-small { color:#6b7280; }
+</style>
+
+<div class="profile-card card p-4 text-center">
+  {% if profile.picture %}
+    <img src="{{ profile.picture.url }}" class="rounded-circle" width="140" height="140" style="object-fit:cover;">
+  {% else %}
+    <div id="avatar-default" class="avatar-circle" data-initial="{{ profile.display_name|default:profile.user.username|slice:':1'|upper }}"></div>
+  {% endif %}
+
+  <h4 class="mt-3">{{ profile.display_name }}</h4>
+  <small class="meta-small">@{{ profile.user.username }}</small>
+
+  {% if profile.bio %}
+    <p class="mt-3">{{ profile.bio }}</p>
+  {% endif %}
+
+  <div class="mt-3 d-flex justify-content-center gap-2">
+    <a href="{% url 'chat:home' %}" class="btn btn-outline-primary">Back</a>
+    <a href="#" id="message-from-profile" class="btn btn-primary">Message</a>
+    {% if is_own %}
+      <a href="{% url 'chat:edit_profile' %}" class="btn btn-outline-secondary">Edit Profile</a>
+      <a href="{% url 'chat:logout' %}" class="btn btn-outline-danger">Logout</a>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  (function(){
+    const pal = ['#EF4444','#F59E0B','#10B981','#3B82F6','#8B5CF6','#F97316','#06B6D4','#F43F5E'];
+    const el = document.getElementById('avatar-default');
+    if(!el) return;
+    const initial = el.dataset.initial || 'A';
+    const idx = (initial.charCodeAt(0) % pal.length);
+    el.style.background = pal[idx];
+    el.textContent = initial;
+  })();
+
+  document.getElementById('message-from-profile').addEventListener('click', async function(e){
+    e.preventDefault();
+    const username = "{{ profile.user.username }}";
+    const res = await fetch("{% url 'chat:get_personal_room' %}?username="+encodeURIComponent(username));
+    const data = await res.json();
+    if(data.room){
+      window.location.href = "{% url 'chat:home' %}" + "?open="+encodeURIComponent(data.room)+"&label="+encodeURIComponent(data.other);
+    } else {
+      alert('Could not open chat');
+    }
+  });
+</script>
+{% endblock %}

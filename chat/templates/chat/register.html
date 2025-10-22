@@ -1,0 +1,124 @@
+{% extends "chat/base.html" %}
+{% load static %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height:78vh;">
+  <div class="card shadow-sm border-0" style="max-width:420px;width:100%;border-radius:14px;padding:28px;background:var(--card);">
+    <div class="text-center mb-3">
+      <img src="{% static 'chat/img/logo.png' %}" alt="TWINK" style="height:56px;">
+    </div>
+
+    <h4 class="text-center mb-1" style="font-weight:700;">Create account</h4>
+    <p class="text-center text-muted mb-4" style="margin-top:0;">Sign up to start private chats and groups</p>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="mb-3">
+        <label class="form-label small mb-1" for="id_username">Username</label>
+        {{ form.username }}
+        {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
+        <div id="username-hint" class="small text-muted mt-1">5–16 characters. lowercase letters, digits, dot and underscore allowed.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small mb-1" for="id_email">Email</label>
+        {{ form.email }}
+        {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small mb-1" for="id_password">Password</label>
+        {{ form.password }}
+        {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>{% endif %}
+        <div class="small text-muted mt-1">Use at least 8 characters for a stronger password.</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label small mb-1" for="id_password_confirm">Confirm password</label>
+        {{ form.password_confirm }}
+        {% if form.password_confirm.errors %}<div class="text-danger small mt-1">{{ form.password_confirm.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="d-grid mb-2">
+        <button type="submit" class="btn btn-primary btn-lg" style="border-radius:10px;font-weight:600;">Create account</button>
+      </div>
+
+      <div class="text-center">
+        <small class="text-muted">Already registered? <a href="{% url 'chat:login' %}" class="text-decoration-none">Log in</a></small>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .form-control.form-control-lg {
+    height:50px;
+    border-radius:12px;
+    padding:12px 14px;
+    box-shadow:none;
+    border:1px solid var(--border);
+    background:transparent;
+  }
+  .form-control.form-control-lg:focus {
+    border-color: var(--accent);
+    box-shadow: 0 6px 18px rgba(13,110,253,0.08);
+    outline: none;
+  }
+  .card {
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 40px rgba(15,23,42,0.08);
+  }
+  .text-muted { color: var(--muted) !important; }
+  .btn-primary {
+    background: var(--accent);
+    border: none;
+  }
+  @media (max-width: 480px) {
+    .card { padding:20px; border-radius:12px; }
+    .form-control.form-control-lg { height:44px; }
+  }
+</style>
+
+<script>
+  (function(){
+    const username = document.getElementById('id_username');
+    const hint = document.getElementById('username-hint');
+    if(!username) return;
+    let last = '';
+    username.addEventListener('input', async () => {
+      const v = (username.value || '').trim();
+      if(v === last) return;
+      last = v;
+      if(v.length < 5 || v.length > 16){
+        hint.textContent = 'Username must be 5–16 characters.';
+        hint.className = 'small text-danger mt-1';
+        return;
+      }
+      if(!/^[a-z0-9._]+$/.test(v)){
+        hint.textContent = 'Only lowercase letters, digits, dot and underscore allowed.';
+        hint.className = 'small text-danger mt-1';
+        return;
+      }
+      try {
+        const res = await fetch("{% url 'chat:username_check' %}?q=" + encodeURIComponent(v));
+        if(!res.ok) throw 0;
+        const data = await res.json();
+        if(data.exists){
+          hint.textContent = 'This username is already taken.';
+          hint.className = 'small text-danger mt-1';
+        } else {
+          hint.textContent = 'Username available.';
+          hint.className = 'small text-success mt-1';
+        }
+      } catch(e) {
+        hint.textContent = 'Could not verify username right now.';
+        hint.className = 'small text-muted mt-1';
+      }
+    });
+  })();
+</script>
+{% endblock %}
