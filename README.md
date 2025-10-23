@@ -1,23 +1,18 @@
-# TWINK — Realtime Chat App  
+# TWINK — Realtime Chat App
 
-TWINK is a clean, minimal **Django + Channels** based real-time chat web app featuring:  
-- User registration, login, and profile system  
-- Personal and group chats  
-- Light/Dark theme toggle  
-- Modern Bootstrap 5 interface  
-- Optional front-end **demo mode** (fake users, messages & groups)  
-- Fully ready for local development and GitHub deployment  
+A clean, minimal **Django + Channels** real-time chat application with personal and group chats, light/dark themes, and a modern Bootstrap 5 UI. This README is organized for clarity and copy-paste readiness so you can drop it directly into `README.md` in your repository.
 
 ---
 
-## ⚙️ Features Overview
+## 🔥 Highlights
 
-- **User system:** Register, login, profile picture & bio  
-- **Chats:** 1-on-1 and group messaging  
-- **UI:** Modern, Instagram-inspired chat interface with read receipts, timestamps & avatars  
-- **Themes:** Light/Dark mode support across the entire app  
-- **Demo mode:** Optional JavaScript demo injector for fake chat users & messages  
-- **Responsive:** Works beautifully on desktop and mobile  
+* ✅ Real-time messaging using **Django Channels** and WebSockets
+* ✅ User registration, login, profile pictures & bios
+* ✅ 1‑on‑1 (private) chats and group chats
+* ✅ Light / Dark theme toggle across the UI
+* ✅ Modern, responsive Bootstrap 5 interface inspired by Instagram/WhatsApp
+* ✅ Optional **demo mode**: inject fake users/messages for a UI preview
+* ✅ Ready for local development, testing and deployment
 
 ---
 
@@ -26,15 +21,19 @@ TWINK is a clean, minimal **Django + Channels** based real-time chat web app fea
 Below are screenshots of key pages (place your images in `screenshots/`):
 
 ### Welcome Page
+
 ![Welcome Page](docs/screenshots/Welcome_Page.jpg)
 
 ### Login Page
+
 ![Login Page](docs/screenshots/Login_Page.jpg)
 
 ### Registration Page
+
 ![Registration Page](docs/screenshots/Register_Page.jpg)
 
 ### Settings
+
 ![Settings](docs/screenshots/Settings_Page1.jpg)
 
 ![Settings](docs/screenshots/Settings_Page2.jpg)
@@ -42,95 +41,197 @@ Below are screenshots of key pages (place your images in `screenshots/`):
 ![Terms & Condition](docs/screenshots/TermsandCondition_Page.jpg)
 
 ### Home Page
+
 ![Home Page](docs/screenshots/Home_Page.jpg)
 
 ### Profile
+
 ![Profile](docs/screenshots/Profile_Page1.jpg)
 
-![Edit_Profile](docs/screenshots/EditProfile_Page.jpg)
+![Edit\_Profile](docs/screenshots/EditProfile_Page.jpg)
+
+---
+
+## ⚙️ Features
+
+### Authentication & Profiles
+
+* Django built-in auth with username/email registration
+* Profile model supports avatar (profile picture), bio and basic status
+* Edit profile page with preview
+
+### Chat System
+
+* **Private chats** between two users
+* **Group chats** (create, invite, leave)
+* Messages include text, timestamps and read receipts
+* Avatars and online indicators in chat lists
+* Message ordering, typing indicators (UI), and message metadata
+
+### UI & Theme
+
+* Bootstrap 5 based responsive layout
+* Light / Dark theme stored in localStorage so theme persists across visits
+* Mobile-first design with chat list + message view split
+
+### Demo Mode
+
+* Optional JavaScript demo injector that creates fake users, groups and messages for demoing the UI
+* Toggleable from `settings` or via a query param (`?demo=1`)
 
 ---
 
 ## 🧠 Tech Stack
 
-| Layer | Technology |
-|-------|-------------|
-| Backend | Django 5.x, Django Channels |
-| Frontend | HTML, Bootstrap 5, CSS (custom theme), Vanilla JS |
-| Database | SQLite (default) |
-| Auth | Django built-in authentication |
-| Deployment | GitHub + PythonAnywhere/Render ready |
+| Layer      | Technology                                        |
+| ---------- | ------------------------------------------------- |
+| Backend    | Django 5.x, Django Channels                       |
+| Frontend   | HTML, Bootstrap 5, CSS (custom theme), Vanilla JS |
+| Database   | SQLite (default)                                  |
+| Auth       | Django built-in authentication                    |
+| Deployment | GitHub + PythonAnywhere/Render ready              |
 
 ---
 
-## 🚀 Install & Run (Development) — Full Steps
+## 🚀 Install & Run (Development)
 
-### 1. Clone the repository
+1. **Clone the repo**
 
 ```bash
 git clone https://github.com/<your-username>/TWINK.git
 cd TWINK
+```
 
-### 2. Create & Activate Virtual Environment
+2. **Create & activate virtual environment**
 
-On Windows (PowerShell):
-    python -m venv venv
-    venv\Scripts\activate
-On macOS / Linux (bash):
-    python -m venv venv
-    source venv/bin/activate
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
 
-### 3. Install Dependencies
+# macOS / Linux
+python -m venv venv
+source venv/bin/activate
+```
 
-If requirements.txt is present:
-    pip install -r requirements.txt
-If not:
-    pip install Django==5.2.7 channels djangorestframework
+3. **Install dependencies**
 
-### 4. Apply Database Migrations
+```bash
+pip install -r requirements.txt
+```
 
+4. **Apply database migrations**
+
+```bash
 python manage.py migrate
+```
 
-### 5. (Optional) Create a Superuser
+5. **Create a superuser (optional)**
 
+```bash
 python manage.py createsuperuser
+```
 
-### 6. Run Development Server
+6. **Run development server**
 
+```bash
 python manage.py runserver
-Now visit:
-    👉 http://127.0.0.1:8000/
+```
+
+Visit 👉 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
-## 📁 Project Structure (Important Files)
+## 📂 Project Structure
 
-### TWINK/                            # project root
-├─ chat/
-│  ├─ templates/chat/              # HTML templates
-│  │  ├─ base.html
-│  │  ├─ welcome.html
-│  │  ├─ login.html
-│  │  ├─ register.html
-│  │  ├─ home.html
-│  │  ├─ profile.html
-│  │  └─ view_profile.html
-│  ├─ static/chat/                # Static files
-│  │  ├─ css/twink.css
-│  │  ├─ js/twink.js
-│  │  └─ img/
-│  │     ├─ logo.png
-│  │     ├─ favicon-32.png
-│  │     ├─ favicon-16.png
-│  │     └─ favicon.ico
+```
+TWINK/                            # repo root
+├─ chat/                          # Django app for chat functionality
+│  ├─ templates/chat/             # HTML templates (base, login, home, profile...)
+│  ├─ static/chat/                # CSS, JS, images
 │  ├─ models.py                   # Chat, Group, Profile models
-│  ├─ views.py                    # App views
-│  └─ forms.py                    # Registration, profile forms
-├─ TWINK_proj/                    # Project configuration
-│  ├─ settings.py
-│  └─ urls.py
-├─ db.sqlite3                     # Default database
-├─ requirements.txt
-└─ README.md
+│  ├─ consumers.py                # WebSocket consumers (channels)
+│  ├─ routing.py                  # Channels routing
+│  ├─ views.py                    # Views for pages & APIs
+│  └─ forms.py                    # Registration & profile forms
+├─ TWINK_proj/                    # Django project configuration
+│  ├─ asgi.py                     # Channels ASGI entry
+│  ├─ settings.py                 # Settings & channels config
+│  └─ urls.py                     # Project URL routing
+├─ docs/                          # screenshots and documentation assets
+├─ requirements.txt               # Python dependencies
+└─ README.md                      # this file
+```
 
 ---
+
+## 🔌 Channels Configuration
+
+* `TWINK_proj/asgi.py` should load `channels.routing.ProtocolTypeRouter` and include `AuthMiddlewareStack` for WebSocket auth.
+* For production-ready deployments, configure a channel layer like Redis and set `CHANNEL_LAYERS` in `settings.py`.
+
+Example:
+
+```python
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [("127.0.0.1", 6379)]},
+    },
+}
+```
+
+---
+
+## ✅ Demo Mode
+
+Enable demo mode via Settings or add `?demo=1` to URL. It injects fake users/messages purely on the front-end for UI previews.
+
+---
+
+## 🧪 Testing
+
+Run tests:
+
+```bash
+python manage.py test
+```
+
+---
+
+## 🧩 Deployment
+
+* Use Redis for Channels in production.
+* Run with Daphne or Uvicorn:
+
+```bash
+daphne -b 0.0.0.0 -p 8000 TWINK_proj.asgi:application
+```
+
+* Serve static/media files with Nginx.
+* Configure environment variables (`DEBUG`, `SECRET_KEY`, `ALLOWED_HOSTS`).
+
+---
+
+## 🧑‍💻 Contributing
+
+1. Fork the repository
+2. Create a branch: `git checkout -b feature/awesome`
+3. Commit & push: `git push origin feature/awesome`
+4. Open a Pull Request
+
+---
+
+## 📝 License
+
+MIT License — see `LICENSE` for details.
+
+---
+
+## 📬 Contact
+
+Need help integrating this app (e.g., Docker, CI/CD, or React frontend)? Reach out and I’ll guide you through it.
+
+---
+
+*Made with ❤️ for TWINK — drop screenshots into `docs/screenshots/` and enjoy building!*
